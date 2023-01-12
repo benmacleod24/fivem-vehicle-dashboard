@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model vehiclelist {
+  id           Int              @id @unique(map: "id") @default(autoincrement())
+  model        String           @unique(map: "model")
+  vehicleBrand String           @db.Text
+  displayName  String           @db.Text
+  style        String           @db.Text
+  price        Int              @default(1000) @db.MediumInt
+  seats        Int              @default(0) @db.TinyInt
+  trunk        Int              @default(0) @db.SmallInt
+  stock        Int              @default(10) @db.SmallInt
+  shop         vehiclelist_shop @default(pdm)
+  released     Boolean          @default(false)
+
+  @@index([price], map: "price")
+  @@index([released], map: "released")
+  @@index([seats], map: "seats")
+  @@index([shop], map: "shop")
+  @@index([stock], map: "stock")
+  @@index([style(length: 768)], map: "style")
+  @@index([trunk], map: "trunk")
+  @@map("__vehiclelist")
+}
+
+model weed {
+  id      Int      @id @unique(map: "id") @default(autoincrement())
+  cid     Int      @default(0)
+  x       Decimal? @db.Decimal(10, 2)
+  y       Decimal? @db.Decimal(10, 2)
+  z       Decimal? @db.Decimal(10, 2)
+  growth  Int?     @default(0)
+  type    String?  @db.VarChar(50)
+  visible Int?     @default(1)
+  time    String?  @default("0") @db.LongText
+  house   String?  @db.TinyText
+
+  @@index([cid], map: "cid")
+  @@index([time(length: 3072)], map: "time")
+  @@index([visible], map: "visible")
+}
+
+enum vehiclelist_shop {
+  pdm
+  wildthrottle
+  driftschool
+  police
+  ems
+
+  @@map("__vehiclelist_shop")
+}
