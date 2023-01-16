@@ -47,6 +47,754 @@ model weed {
   @@index([visible], map: "visible")
 }
 
+model anticheat {
+  id      Int    @id @unique(map: "id") @default(autoincrement())
+  steam   String @db.MediumText
+  ip      String @db.MediumText
+  discord String @db.MediumText
+  license String @db.MediumText
+  reason  String @db.MediumText
+
+  @@index([discord(length: 768)], map: "discord")
+  @@index([ip(length: 768)], map: "ip")
+  @@index([license(length: 768)], map: "license")
+  @@index([steam(length: 768)], map: "steam")
+  @@map("__anticheat")
+}
+
+model bans {
+  id        Int     @id @unique(map: "id") @default(autoincrement())
+  steamName String? @db.Text
+  steamHex  String? @db.Text
+  discord   String? @db.Text
+  license   String? @db.Text
+  ip        String? @db.Text
+  xboxlive  String? @db.Text
+  liveid    String? @db.Text
+  hwids     String? @db.LongText
+  reason    String? @db.Text
+  time      String  @default("0") @db.VarChar(50)
+  bannedBy  String  @db.Text
+
+  @@index([discord(length: 3072)], map: "discord")
+  @@index([hwids(length: 3072)], map: "hwids")
+  @@index([ip(length: 3072)], map: "ip")
+  @@index([license(length: 3072)], map: "license")
+  @@index([liveid(length: 3072)], map: "liveid")
+  @@index([steamHex(length: 3072)], map: "steamHex")
+  @@index([steamName(length: 3072)], map: "steamName")
+  @@index([xboxlive(length: 3072)], map: "xboxlive")
+  @@map("__bans")
+}
+
+model businessaccounts {
+  id            Int    @id @unique(map: "id") @default(autoincrement())
+  business_name String @default("0") @db.VarChar(50)
+  amount        Int    @default(0)
+  commission    Int    @default(15)
+  businessLog   String @db.LongText
+  level         Int    @default(1)
+  totalCrafts   Int    @default(0)
+  crafts        Int    @default(0)
+
+  @@map("__businessaccounts")
+}
+
+model criminals {
+  id         Int            @id @unique(map: "id") @default(autoincrement())
+  gang       String?        @db.Text
+  warehouse  String?        @db.LongText
+  unlocked   Int            @default(0)
+  level      Int            @default(1)
+  members    String?        @db.LongText
+  craftables String?        @db.LongText
+  crafted    Int            @default(0)
+  texture    Int?
+  reputation Float          @default(0) @db.Float
+  display    String         @db.Text
+  disabled   Int            @default(0)
+  type       criminals_type @default(Southside)
+  block      String?        @db.LongText
+
+  @@index([gang(length: 255)], map: "gang")
+  @@map("__criminals")
+}
+
+model playercars {
+  id                  Int     @id @unique(map: "id") @default(autoincrement())
+  cid                 Int?
+  purchase_price      Float?  @db.Float
+  isFinanced          Int?
+  model               String? @db.VarChar(50)
+  vehicle_state       String? @db.LongText
+  fuel                Int?    @default(100)
+  name                String? @db.VarChar(50)
+  engine_damage       BigInt? @default(1000) @db.UnsignedBigInt
+  body_damage         BigInt? @default(1000)
+  degredation         String? @db.LongText
+  current_garage      String  @default("Celtica Garage") @db.VarChar(50)
+  financed            Int?    @default(0)
+  last_payment        Int?    @default(0)
+  coords              String? @db.LongText
+  license_plate       String  @default("") @db.VarChar(255)
+  payments_left       Int?    @default(0)
+  data                String? @db.LongText
+  repoed              Int     @default(0)
+  paymentDue          Int?    @default(0)
+  lastroadtax_payment String? @default("7") @db.VarChar(50)
+  roadtax             String? @default("0") @db.VarChar(50)
+  roadtaxDue          String? @default("0") @db.VarChar(50)
+  sale                String  @default("0") @db.VarChar(50)
+  vinscratched        Int     @default(0)
+
+  @@index([cid], map: "cid")
+  @@index([license_plate], map: "license_plate")
+  @@index([repoed], map: "repoed")
+  @@index([vehicle_state(length: 768)], map: "vehicle_state")
+  @@map("__playercars")
+}
+
+model playercharacters {
+  id             Int      @id @unique(map: "id") @default(autoincrement())
+  owner          String?  @db.VarChar(50)
+  first_name     String   @default("Callum") @db.VarChar(50)
+  last_name      String   @default("King") @db.VarChar(50)
+  date_created   DateTime @default(now()) @db.Timestamp(0)
+  dob            String?  @default("NULL") @db.VarChar(50)
+  cash           Int?     @default(500)
+  bank           Int      @default(5000)
+  phone_number   String   @db.LongText
+  story          String   @default("Default") @db.Text
+  new            Int      @default(0)
+  deleted        Int      @default(0)
+  gender         Int      @default(0)
+  jail_time      Int      @default(0)
+  stress_level   Int?     @default(0)
+  metaData       String?  @default("{}") @db.VarChar(1520)
+  bones          String?  @default("{}") @db.MediumText
+  emotes         String?  @default("{}") @db.VarChar(4160)
+  paycheck       Int?     @default(0)
+  meta           String?  @default("move_m@casual@d") @db.Text
+  job            String?  @default("unemployed") @db.VarChar(50)
+  rank           Int?     @default(0)
+  gang           String?  @db.VarChar(50)
+  gangrank       Int?     @default(0)
+  job2           String?  @default("unemployed") @db.VarChar(50)
+  rank2          Int?     @default(0)
+  chickenamount  Int      @default(0)
+  garbageamount  Int      @default(0)
+  fishingamount  Int      @default(0)
+  huntingamount  Int      @default(0)
+  miningamount   Int      @default(0)
+  scubaamount    Int      @default(0) @db.UnsignedInt
+  truckeramount  Int      @default(0)
+  gopostalamount Int      @default(0)
+  cleaningamount Int      @default(0)
+  pizzaamount    Int      @default(0)
+  sewingamount   Int      @default(0)
+  deliveryamount Int      @default(0)
+  phoneSettings  String?  @db.Text
+  handle         String?  @db.TinyText
+  casinoBalance  String   @default("0") @db.VarChar(50)
+  motel          Int      @default(1)
+  cryptos        String   @default("0") @db.Text
+  callsign       Int      @default(0)
+  licenses       String?  @db.LongText
+
+  @@index([gang], map: "gang")
+  @@index([gangrank], map: "gangrank")
+  @@index([job], map: "job")
+  @@index([phone_number(length: 768)], map: "phone_number")
+  @@index([rank], map: "rank")
+  @@map("__playercharacters")
+}
+
+model users {
+  id                 Int       @id @unique(map: "id") @default(autoincrement())
+  steamHex           String?   @db.VarChar(100)
+  name               String?   @default("Uknown") @db.VarChar(255)
+  license            String?   @default("Uknown") @db.VarChar(255)
+  rank               String?   @default("user") @db.VarChar(50)
+  date_created       DateTime? @default(now()) @db.Timestamp(0)
+  last_logged        DateTime? @default(now()) @db.Timestamp(0)
+  hudSettings        String?   @db.LongText
+  inventory_settings String?   @db.LongText
+  r_t                Int       @default(0)
+
+  @@index([hudSettings(length: 768)], map: "hudSettings")
+  @@index([license], map: "license")
+  @@index([name], map: "name")
+  @@index([steamHex], map: "steamHex")
+  @@map("__users")
+}
+
+model vehicleshop {
+  id       Int    @id @unique(map: "id") @default(autoincrement())
+  business String @db.Text
+  vehicles String @db.LongText
+
+  @@index([business(length: 768)], map: "business")
+  @@map("__vehicleshop")
+}
+
+model vote_amount {
+  id     Int    @id @unique(map: "id") @default(autoincrement())
+  cid    Int    @default(0)
+  name   String @db.TinyText
+  amount Int    @default(0)
+
+  @@index([cid], map: "cid")
+  @@map("__vote_amount")
+}
+
+model votes {
+  id        Int    @id @unique(map: "id") @default(autoincrement())
+  candidate String @db.TinyText
+
+  @@map("__votes")
+}
+
+model aircrafts {
+  id    Int     @id @unique(map: "id") @default(autoincrement())
+  model String? @db.VarChar(50)
+  stock Int?
+
+  @@index([model], map: "model")
+}
+
+model bankinglogs {
+  id       Int    @id @unique(map: "id") @default(autoincrement())
+  cid      Int?
+  amount   Int?
+  reason   String @db.LongText
+  withdraw Int?
+  business Int    @default(0)
+
+  @@index([cid], map: "cid")
+}
+
+model boost_queue {
+  identifier String @id @db.VarChar(60)
+  pSrc       Int?
+}
+
+model boosting_settings {
+  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
+  id Int @id @default(autoincrement()) @map("#")
+  citizenid  String  @db.VarChar(255)
+  background String? @db.VarChar(255)
+  class      String  @default("D") @db.TinyText
+  progress   Int     @default(0)
+  vin        Int?
+
+  @@index([citizenid], map: "citizenid")
+}
+
+model boostingcharacterlevels {
+  boosterId       String   @id
+  characterId     Int
+  experienceLevel Int      @default(500)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+}
+
+model boostingcontracts {
+  id               String         @id
+  vehicle          String
+  level            Int
+  experienceReward Int
+  publicCost       Decimal        @db.Decimal(10, 2)
+  contractOwner    Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime
+  boostinglevels   boostinglevels @relation(fields: [level], references: [id], map: "boostingContracts_level_fkey")
+
+  @@index([level], map: "boostingContracts_level_fkey")
+}
+
+model boostinglevels {
+  id                Int                 @id @default(autoincrement())
+  minimumExpLevel   Int                 @default(500)
+  displayLevel      String              @default("Z")
+  boostingcontracts boostingcontracts[]
+}
+
+model character_bills {
+  id       Int    @id @unique(map: "id") @default(autoincrement())
+  cid      Int
+  amount   Int
+  business String @db.Text
+  owner    String @db.Text
+
+  @@index([cid], map: "cid")
+}
+
+model character_current {
+  id           Int     @id @unique(map: "id") @default(autoincrement())
+  cid          Int?
+  model        String? @db.VarChar(50)
+  drawables    String? @db.MediumText
+  props        String? @db.MediumText
+  drawtextures String? @db.MediumText
+  proptextures String? @db.MediumText
+
+  @@index([cid], map: "cid")
+}
+
+model character_face {
+  id            Int     @id @unique(map: "id") @default(autoincrement())
+  cid           Int?
+  hairColor     String? @db.MediumText
+  headBlend     String? @db.MediumText
+  headOverlay   String? @db.MediumText
+  headStructure String? @db.MediumText
+
+  @@index([cid], map: "cid")
+}
+
+model character_outfits {
+  id           Int     @id @unique(map: "id") @default(autoincrement())
+  cid          Int?
+  model        String? @db.VarChar(50)
+  name         String? @db.Text
+  slot         Int?
+  drawables    String? @default("{}") @db.Text
+  props        String? @default("{}") @db.Text
+  drawtextures String? @default("{}") @db.Text
+  proptextures String? @default("{}") @db.Text
+  hairColor    String? @default("{}") @db.Text
+
+  @@index([cid], map: "cid")
+}
+
+model characteroutfits {
+  id      Int    @id @unique(map: "id") @default(autoincrement())
+  cid     Int    @default(0)
+  outfits String @default("[]") @db.LongText
+
+  @@index([cid], map: "cid")
+}
+
+model characters_eyes {
+  id       Int    @id @unique(map: "id") @default(autoincrement())
+  cid      Int    @default(0)
+  eyeColor String @default("0") @db.VarChar(50)
+
+  @@index([cid], map: "cid")
+}
+
+model characters_weapons {
+  index Int     @id @unique(map: "index") @default(autoincrement())
+  id    Int     @default(0)
+  type  String? @db.VarChar(255)
+  ammo  Int?    @default(0)
+
+  @@index([id], map: "id")
+}
+
+model groupjobs {
+  id            Int    @id @unique(map: "id") @default(autoincrement())
+  groupname     String @db.VarChar(50)
+  pin           String @db.VarChar(50)
+  job           String @db.VarChar(50)
+  ownerid       String @db.VarChar(50)
+  joinedPlayers String @db.MediumText
+
+  @@index([groupname], map: "groupname")
+  @@index([pin], map: "pin")
+}
+
+model import_warehouse {
+  id        Int    @id @unique(map: "id") @default(autoincrement())
+  cid       String @db.VarChar(50)
+  warehouse String @db.VarChar(50)
+  vehicles  String @default("{}") @db.LongText
+  sellable  String @default("0") @db.VarChar(50)
+  class     String @default("D-Class") @db.VarChar(50)
+  progress  String @default("0") @db.VarChar(50)
+  tier      Int    @default(1)
+
+  @@index([cid], map: "cid")
+}
+
+model inventory_player {
+  id        Int    @id @unique(map: "id") @default(autoincrement())
+  name      String @db.TinyText
+  inventory String @db.LongText
+
+  @@index([name(length: 255)], map: "name")
+}
+
+model inventory_stash {
+  id        Int    @id @unique(map: "id") @default(autoincrement())
+  name      String @db.TinyText
+  inventory String @db.LongText
+
+  @@index([name(length: 255)], map: "name")
+}
+
+model inventory_vehicles {
+  id        Int    @id @unique(map: "id") @default(autoincrement())
+  name      String @db.TinyText
+  inventory String @db.LongText
+
+  @@index([name(length: 255)], map: "name")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model irp_import_vehs {
+  id      Int
+  cid     String  @db.VarChar(50)
+  vehicle String  @db.VarChar(50)
+  class   String? @db.VarChar(50)
+  price   String  @db.VarChar(50)
+
+  @@index([cid], map: "cid")
+  @@index([id], map: "id")
+  @@ignore
+}
+
+model mdt_bolos {
+  id           Int     @id
+  name         String? @db.VarChar(255)
+  char_id      Int?
+  rId          Int?
+  report_title String? @db.VarChar(255)
+  rType        String? @default("Incident Report") @db.VarChar(255)
+  charges      String? @db.LongText
+  date         String? @db.VarChar(255)
+  expire       String? @db.VarChar(255)
+  notes        String? @db.VarChar(255)
+  author       String? @db.VarChar(255)
+}
+
+model mdt_reports {
+  id        Int     @id @unique(map: "id") @default(autoincrement())
+  title     String? @db.VarChar(255)
+  type      String  @default("Incident Report") @db.VarChar(255)
+  details   String? @db.LongText
+  evidence  String? @db.LongText
+  officers  String? @db.LongText
+  criminals String? @db.LongText
+  time      String? @db.VarChar(255)
+  author    String  @default("None") @db.VarChar(255)
+  status    String  @default("true") @db.VarChar(255)
+  password  String? @db.Text
+}
+
+model mdt_warrants {
+  id     Int     @id @unique(map: "id") @default(autoincrement())
+  cid    Int?
+  name   String? @db.VarChar(255)
+  rId    Int?
+  rType  String  @default("Incident Report") @db.VarChar(255)
+  time   String? @db.LongText
+  expire String? @db.VarChar(255)
+  author String? @db.VarChar(255)
+}
+
+model mech_materials {
+  id         Int    @id @unique(map: "id") @default(autoincrement())
+  Shop       String @db.MediumText
+  rubber     Int    @default(0)
+  aluminium  Int    @default(0)
+  scrapmetal Int    @default(0)
+  plastic    Int    @default(0)
+  copper     Int    @default(0)
+  steel      Int    @default(0)
+  glass      Int    @default(0)
+}
+
+model pdmcars {
+  id      Int     @id @unique(map: "id") @default(autoincrement())
+  vehicle String? @db.VarChar(50)
+  stock   Int?
+
+  @@index([vehicle], map: "vehicle")
+}
+
+model phone_yp {
+  id          Int     @id @unique(map: "id") @default(autoincrement())
+  name        String? @db.VarChar(50)
+  job         String? @db.VarChar(500)
+  phonenumber String? @db.VarChar(50)
+}
+
+model playercontacts {
+  dbid       Int     @id @unique(map: "dbid") @default(autoincrement())
+  identifier String  @db.VarChar(40)
+  name       String  @db.LongText
+  number     String  @db.LongText
+  photo      String? @db.Text
+
+  @@index([identifier], map: "identifier")
+}
+
+model playermdt {
+  id          Int      @id @default(autoincrement())
+  char_id     Int?
+  notes       String   @db.VarChar(255)
+  mugshot_url String?  @db.VarChar(255)
+  bail        Boolean? @db.Bit(1)
+}
+
+model playermessages {
+  id              Int      @id @unique(map: "id") @default(autoincrement())
+  sender          String   @db.VarChar(10)
+  receiver        String   @db.VarChar(10)
+  message         String   @default("0") @db.VarChar(255)
+  date            DateTime @default(now()) @db.Timestamp(0)
+  isRead          Int      @default(0)
+  senderdeleted   Int      @default(0)
+  receiverdeleted Int      @default(0)
+
+  @@index([receiver], map: "receiver")
+  @@index([sender], map: "sender")
+}
+
+model playerstattoos {
+  id         Int     @id @unique(map: "id") @default(autoincrement())
+  identifier Int?
+  tattoos    String? @db.Text
+
+  @@index([identifier], map: "identifier")
+}
+
+model purchases {
+  id          Int    @id @unique(map: "id") @default(autoincrement())
+  cid         Int    @unique(map: "cid")
+  jointsold   String @default("0") @db.VarChar(50)
+  gunsold     Int    @default(0)
+  acetonesold String @default("0") @db.VarChar(50)
+  alcoholsold String @default("0") @db.VarChar(50)
+  solventsold Int    @default(0)
+  cementsold  Int    @default(0)
+}
+
+model ra_boosting_contracts {
+  id                    Int                          @id @default(autoincrement()) @db.UnsignedInt
+  owner_identifier      String                       @default("") @db.VarChar(100)
+  status                ra_boosting_contracts_status
+  price                 Int                          @db.UnsignedInt
+  experience_gain       Int                          @db.UnsignedInt
+  payout_cash           Int                          @default(0) @db.UnsignedInt
+  payout_crypto         Int                          @default(0) @db.UnsignedInt
+  employer              String                       @default("Anonymous") @db.VarChar(100)
+  vehicle_model         String                       @db.VarChar(100)
+  vehicle_model_name    String                       @db.VarChar(100)
+  vehicle_license_plate String                       @db.VarChar(10)
+  vehicle_class         String                       @default("") @db.VarChar(10)
+  is_vehicle_tuned      Int                          @default(0) @db.TinyInt
+  expiration_date       DateTime                     @default(now()) @db.DateTime(0)
+
+  @@index([owner_identifier], map: "FK_boosting_contracts_characters")
+}
+
+model ra_boosting_user_settings {
+  player_identifier String   @id @db.VarChar(100)
+  alias             String?  @default("Unnamed") @db.VarChar(40)
+  profile_picture   String   @default("https://i.imgur.com/Lu9dGJH.png") @db.VarChar(100)
+  experience        Int      @default(0)
+  crypto            Int      @default(0)
+  is_initialized    Int      @default(0)
+  created_at        DateTime @default(now()) @db.DateTime(0)
+}
+
+model ra_racing_events {
+  id                Int      @id @unique(map: "id") @default(autoincrement())
+  player_identifier String   @db.VarChar(60)
+  text              String   @db.VarChar(100)
+  created_at        DateTime @default(now()) @db.DateTime(0)
+}
+
+model ra_racing_races {
+  id                    Int                 @id @unique(map: "id") @default(autoincrement())
+  track_id              Int
+  started_by_identifier String              @db.VarChar(60)
+  participant_amount    Int?
+  is_competition        Int                 @db.TinyInt
+  prize_money           Int?                @default(0)
+  start_time            DateTime?           @db.DateTime(0)
+  vehicle_class         String?             @db.VarChar(4)
+  lap_amount            Int?                @db.TinyInt
+  finished_at           DateTime?           @db.DateTime(0)
+  ra_racing_results     ra_racing_results[]
+}
+
+model ra_racing_results {
+  id                 Int              @id @unique(map: "id") @default(autoincrement())
+  race_id            Int
+  track_id           Int
+  player_identifier  String           @default("") @db.VarChar(60)
+  position           Int?
+  prize_money        Int?             @default(0)
+  rating_gain        Int?             @default(0)
+  vehicle_model      String?          @db.VarChar(100)
+  vehicle_model_name String?          @db.VarChar(100)
+  vehicle_class      String?          @db.VarChar(100)
+  best_time          Int?
+  best_time_string   String           @db.VarChar(40)
+  total_time         Int?
+  total_time_string  String           @db.VarChar(40)
+  finished_at        DateTime         @default(now()) @db.DateTime(0)
+  ra_racing_races    ra_racing_races  @relation(fields: [race_id], references: [id], onUpdate: Restrict, map: "FK_ra_racing_results_ra_racing_races")
+  ra_racing_tracks   ra_racing_tracks @relation(fields: [track_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_ra_racing_results_ra_racing_tracks")
+
+  @@index([race_id], map: "FK_ra_racing_results_ra_racing_races")
+  @@index([track_id], map: "FK_ra_racing_results_ra_racing_tracks")
+}
+
+model ra_racing_tracks {
+  id                 Int                   @id @unique(map: "id") @default(autoincrement())
+  creator_identifier String                @db.VarChar(60)
+  name               String                @db.VarChar(100)
+  description        String                @db.VarChar(100)
+  type               ra_racing_tracks_type
+  checkpoints        String                @db.LongText
+  objects            String                @db.LongText
+  is_deleted         Int                   @default(0) @db.TinyInt
+  created_at         DateTime              @default(now()) @db.DateTime(0)
+  ra_racing_results  ra_racing_results[]
+}
+
+model ra_racing_user_settings {
+  id                Int      @id @unique(map: "id") @default(autoincrement())
+  player_identifier String   @db.VarChar(60)
+  alias             String?  @default("Unnamed") @db.VarChar(40)
+  profile_picture   String   @default("https://i.imgur.com/Lu9dGJH.png") @db.VarChar(100)
+  rating            Int?     @default(1400) @db.SmallInt
+  created_at        DateTime @default(now()) @db.DateTime(0)
+}
+
+model racing_tracks {
+  id                  Int     @id @unique(map: "id") @default(autoincrement())
+  track_name          String? @db.VarChar(50)
+  creator             String? @db.VarChar(50)
+  distance            Int?
+  races               Int?    @default(0)
+  fastest_car         String? @db.VarChar(50)
+  fastest_name        String? @db.VarChar(50)
+  fastest_lap         String? @db.VarChar(50)
+  fastest_sprint      String? @db.VarChar(50)
+  fastest_sprint_name String? @db.VarChar(50)
+  description         String? @db.VarChar(50)
+  checkpoints         String? @db.Text
+}
+
+model redline_mapped {
+  id            Int    @id @unique(map: "id") @default(autoincrement())
+  plate         String @default("0") @db.VarChar(50)
+  data          String @db.LongText
+  twostep       Int    @default(0)
+  launchcontrol Int    @default(1)
+
+  @@index([plate], map: "plate")
+}
+
+model redline_parts {
+  id            Int     @id @unique(map: "id") @default(autoincrement())
+  license_plate String  @db.VarChar(50)
+  upgradedParts String? @db.LongText
+
+  @@index([license_plate], map: "license_plate")
+}
+
+model shared_vehicles {
+  id            Int                   @id @unique(map: "id") @default(autoincrement())
+  job           String                @db.TinyText
+  model         String                @db.Text
+  data          String?               @db.LongText
+  plate         String                @db.Text
+  engine_damage Int                   @default(1000)
+  body_damage   Int                   @default(1000)
+  state         shared_vehicles_state @default(In)
+  metaData      String?               @db.LongText
+
+  @@index([job(length: 255)], map: "job")
+  @@index([plate(length: 768)], map: "plate")
+}
+
+model storagewars {
+  id       Int    @id @unique(map: "id") @default(autoincrement())
+  password String @db.TinyText
+  x        String @default("") @db.VarChar(50)
+  y        String @default("") @db.VarChar(50)
+  z        String @default("") @db.VarChar(50)
+  name     String @db.MediumText
+}
+
+model towed_cars {
+  id         Int     @id @unique(map: "id") @default(autoincrement())
+  name       String  @db.VarChar(50)
+  model      String  @db.VarChar(50)
+  plate      String  @db.VarChar(50)
+  x          String? @db.VarChar(50)
+  y          String? @db.VarChar(50)
+  z          String? @db.VarChar(50)
+  inprogress String? @default("0") @db.VarChar(50)
+
+  @@index([inprogress], map: "inprogress")
+  @@index([plate], map: "plate")
+}
+
+model vehicle_mdt {
+  id              Int      @id @default(autoincrement())
+  license_plate   String?  @db.VarChar(255)
+  stolen          Boolean? @default(dbgenerated("(b'0')")) @db.Bit(1)
+  notes           String?  @db.VarChar(255)
+  previousHistory String   @db.LongText
+}
+
+model vehicle_stances {
+  id      Int     @id @unique(map: "id") @default(autoincrement())
+  plate   String  @default("") @db.VarChar(64)
+  setting String? @db.LongText
+
+  @@index([plate], map: "plate")
+}
+
+model vehicle_strikes {
+  id        Int     @id @unique(map: "id") @default(autoincrement())
+  cid       Int
+  plate     String  @default("") @db.VarChar(50)
+  vehicle   String  @default("") @db.VarChar(50)
+  strikes   Int     @default(0)
+  time      String  @default("") @db.VarChar(50)
+  strikedby String? @db.Text
+  owner     String? @db.Text
+
+  @@index([cid], map: "cid")
+  @@index([plate], map: "plate")
+}
+
+model weapon_database {
+  id     Int     @id @unique(map: "id") @default(autoincrement())
+  serial String  @db.Text
+  owner  String  @db.Text
+  class  String  @db.Text
+  name   String  @db.Text
+  notes  String? @db.Text
+  stolen Int     @default(0)
+
+  @@index([owner(length: 768)], map: "owner")
+  @@index([serial(length: 768)], map: "serial")
+}
+
+model weapon_serials {
+  id     Int    @id @unique(map: "id") @default(autoincrement())
+  owner  String @db.Text
+  serial String @db.Text
+
+  @@index([owner(length: 768)], map: "owner")
+}
+
+model weaponpurchases {
+  id  Int @id @unique(map: "id") @default(autoincrement())
+  cid Int
+
+  @@index([cid], map: "cid")
+}
+
 enum vehiclelist_shop {
   pdm
   wildthrottle
@@ -55,4 +803,32 @@ enum vehiclelist_shop {
   ems
 
   @@map("__vehiclelist_shop")
+}
+
+enum ra_boosting_contracts_status {
+  AVAILABLE
+  BOUGHT
+  IN_PROGRESS
+  IN_PROGRESS_VIN
+  COMPLETED
+  FAILED
+}
+
+enum ra_racing_tracks_type {
+  SPRINT
+  CIRCUIT
+}
+
+enum shared_vehicles_state {
+  In
+  Out
+}
+
+enum criminals_type {
+  Southside
+  Racer
+  MC
+  Mafia
+
+  @@map("__criminals_type")
 }

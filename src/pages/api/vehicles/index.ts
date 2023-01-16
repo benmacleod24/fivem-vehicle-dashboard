@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@prisma";
+import { z } from "zod";
+import { stringToNumber } from "../../../utils";
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
@@ -17,23 +19,74 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
  * @url /api/vehicles/
  * @description Get a paginated list of all the vehicles.
  */
-const GET = async (req: NextApiRequest, res: NextApiResponse) => {
-	const page: number = Number(req.query.page) || 1;
-	const perPageLimit: number = Number(req.query.perPage) || 10;
 
-	if (isNaN(Number(req.query.page)) || isNaN(Number(req.query.page))) {
+const searchParams = z.object({
+	page: z.ostring().transform(stringToNumber),
+	perPage: z.ostring().transform(stringToNumber),
+	model: z.ostring(),
+	displayName: z.ostring(),
+	vehicleBrand: z.ostring(),
+	shop: z.ostring(),
+	released: z.ostring(),
+	seats: z.ostring().transform(stringToNumber),
+});
+
+const GET = async (req: NextApiRequest, res: NextApiResponse) => {
+	const params = searchParams.parse(req.query);
+	const page: number = Number(params.page) || 1;
+	const perPageLimit: number = Number(params.perPage) || 10;
+	let where = {};
+
+	if (isNaN(Number(params.page)) || isNaN(Number(params.page))) {
 		return res.status(300).json({
 			status: 300,
 			message: "Data input was incorrect/wrong type.",
 		});
 	}
 
-	try {
-		const totalNumOfVehicles = await prisma.vehiclelist.count();
+	// Vehicle Brand
+	if (params.vehicleBrand) {
+		where = { ...where, vehicleBrand: { contains: params.vehicleBrand } };
+	}
 
-		const vehicles = await prisma?.vehiclelist.findMany({
+	// Vehicle Model
+	if (params.model) {
+		where = { ...where, model: { contains: params.model } };
+	}
+
+	// Vehicle Model
+	if (params.displayName) {
+		where = { ...where, displayName: params.displayName };
+	}
+
+	// Vehicle Shop
+	if (params.shop && params.shop !== "all") {
+		where = { ...where, shop: { equals: params.shop } };
+	}
+
+	// Vehicle is Released
+	if (params.released) {
+		if (params.released.toLowerCase() === "not_released") where = { ...where, released: false };
+		if (params.released.toLowerCase() === "released") where = { ...where, released: true };
+	}
+
+	// Vehicle Seats
+	if (params.seats) {
+		where = { ...where, seats: params.seats };
+	}
+
+	try {
+		const totalNumOfVehicles = await prisma.vehiclelist.count({
+			where,
+		});
+
+		const vehicles = await prisma.vehiclelist.findMany({
+			where,
 			take: perPageLimit,
-			skip: page * perPageLimit || 0,
+			skip: page !== undefined && page !== null ? (page - 1) * perPageLimit : 0,
+			orderBy: {
+				id: "asc",
+			},
 		});
 
 		return res.status(200).json({

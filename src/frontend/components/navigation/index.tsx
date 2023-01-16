@@ -32,7 +32,7 @@ const Navigation: React.FC<NavigationProps> = (props) => {
 							fontWeight="semibold"
 							color="whiteAlpha.800"
 						>
-							Infinite FiveM Vehicle Dashboard
+							Infinite Vehicle Dashboard
 						</Text>
 					</Flex>
 				</Flex>

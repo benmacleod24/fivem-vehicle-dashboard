@@ -10,8 +10,6 @@ export const Button: ComponentStyleConfig = {
 			_focus: {
 				bg: "brand.900",
 			},
-			borderColor: "brand.600",
-			border: "1px solid",
 		},
 		"brand.menu": {
 			variant: "unstyled",
