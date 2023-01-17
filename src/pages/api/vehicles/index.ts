@@ -34,7 +34,7 @@ const searchParams = z.object({
 const GET = async (req: NextApiRequest, res: NextApiResponse) => {
 	const params = searchParams.parse(req.query);
 	const page: number = Number(params.page) || 1;
-	const perPageLimit: number = Number(params.perPage) || 10;
+	const perPageLimit: number = Number(params.perPage) || 6;
 	let where = {};
 
 	if (isNaN(Number(params.page)) || isNaN(Number(params.page))) {

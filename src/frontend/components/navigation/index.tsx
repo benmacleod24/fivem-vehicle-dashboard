@@ -14,7 +14,7 @@ interface NavigationProps {}
 
 const Navigation: React.FC<NavigationProps> = (props) => {
 	return (
-		<Flex h="20" bg="background.700">
+		<Flex h="20" minH="20" bg="background.700">
 			<Container maxW="container.xl" as={Flex}>
 				<Flex h="full" align="center">
 					<Icon
