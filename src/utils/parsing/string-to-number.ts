@@ -4,7 +4,3 @@ export const stringToNumber = (s?: string): number | undefined | null => {
 	if (isNaN(res)) return null;
 	return res;
 };
-
-export const doesVehicleHaveDupBrandName = (brand: string, displayName: string) => {
-	return displayName.toLowerCase().split(" ").includes(brand.toLowerCase());
-};

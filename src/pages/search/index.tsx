@@ -2,29 +2,12 @@ import React, { useState, useEffect } from "react";
 import Layout from "../../frontend/components/layout";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import {
-	Code,
-	Divider,
-	Flex,
-	Grid,
-	IconButton,
-	Image,
-	Text,
-	Tooltip,
-	useToast,
-} from "@chakra-ui/react";
+import { Divider, Flex, Grid } from "@chakra-ui/react";
 import { toQuery } from "../../utils";
 import SearchBar from "../../frontend/components/search-vehicles/search-bar";
 import { vehiclelist } from "@prisma/client";
-import { MdModeEditOutline } from "react-icons/md";
 import VehicleCard from "../../frontend/components/search-vehicles/components/vehicle-card";
 import { z } from "zod";
-
-const format = new Intl.NumberFormat("en-US", {
-	style: "currency",
-	currency: "USD",
-	maximumFractionDigits: 0,
-});
 
 interface SearchProps {}
 
