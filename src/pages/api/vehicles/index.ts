@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@prisma";
 import { z } from "zod";
 import { stringToNumber } from "../../../utils";
+import { updateCreateVehicleValidator } from "../../../types";
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
@@ -9,6 +10,8 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
 	switch (method) {
 		case "GET":
 			return GET(req, res);
+		case "POST":
+			return POST(req, res);
 		default:
 			throw new Error("Method does not exist at this endpoint.");
 	}
@@ -97,6 +100,46 @@ const GET = async (req: NextApiRequest, res: NextApiResponse) => {
 				page: page,
 			},
 			data: vehicles,
+			timestamp: new Date(),
+		});
+	} catch (e) {
+		console.log(e);
+		return res.status(500).json({
+			status: 500,
+			message: "Some wild shit fucked up.",
+			error: e,
+		});
+	}
+};
+
+/**
+ * @method POST
+ * @url /api/vehicles/
+ * @description Create a new vehicle in the database.
+ */
+const POST = async (req: NextApiRequest, res: NextApiResponse) => {
+	const vehicleProperties = updateCreateVehicleValidator.parse(req.body);
+
+	// Make sure correct properties exist.
+	if (!vehicleProperties.model || !vehicleProperties) {
+		return res.status(404).json({
+			code: 404,
+			message: "Could not find required properties to create a new vehicle.",
+		});
+	}
+
+	try {
+		// Create the new vehicle in the database.
+		const newVehicle = await prisma.vehiclelist.create({
+			//@ts-ignore
+			data: {
+				...vehicleProperties,
+			},
+		});
+
+		return res.status(200).json({
+			status: 200,
+			data: newVehicle,
 			timestamp: new Date(),
 		});
 	} catch (e) {
