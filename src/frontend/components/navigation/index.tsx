@@ -1,11 +1,4 @@
-import {
-	Button,
-	ButtonGroup,
-	Container,
-	Flex,
-	Icon,
-	Text,
-} from "@chakra-ui/react";
+import { Button, ButtonGroup, Container, Flex, Icon, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { MdOfflineBolt } from "react-icons/md";
@@ -17,21 +10,13 @@ const Navigation: React.FC<NavigationProps> = (props) => {
 		<Flex h="20" minH="20" bg="background.700">
 			<Container maxW="container.xl" as={Flex}>
 				<Flex h="full" align="center">
-					<Icon
-						as={MdOfflineBolt}
-						fontSize="6xl"
-						color="brand.700"
-					/>
+					<Icon as={MdOfflineBolt} fontSize="6xl" color="brand.700" />
 
 					<Flex flexDir={"column"} fontSize="sm" ml="2.5">
 						<Text fontSize={"sm"} color="whiteAlpha.700">
 							@bolt-labs/project
 						</Text>
-						<Text
-							fontSize={"md"}
-							fontWeight="semibold"
-							color="whiteAlpha.800"
-						>
+						<Text fontSize={"md"} fontWeight="semibold" color="whiteAlpha.800">
 							Infinite Vehicle Dashboard
 						</Text>
 					</Flex>
@@ -41,7 +26,7 @@ const Navigation: React.FC<NavigationProps> = (props) => {
 						<Link href={"/"}>
 							<Button>Home</Button>
 						</Link>
-						<Link href="/search">
+						<Link href="/search-vehicles">
 							<Button>Vehicle Search</Button>
 						</Link>
 					</ButtonGroup>

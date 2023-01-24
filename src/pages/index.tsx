@@ -1,12 +1,18 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "@next/font/google";
-import Layout from "../frontend/components/layout";
-import { Container, Flex, Text, Icon, Button, ButtonGroup } from "@chakra-ui/react";
-import { MdOfflineBolt } from "react-icons/md";
+import React from "react";
 
-const inter = Inter({ subsets: ["latin"] });
+import { Flex } from "@chakra-ui/react";
+
+import VehicleGraphs from "../frontend/components/charts";
+import Layout from "../frontend/components/layout";
+import VehicleStats from "../frontend/components/stats";
 
 export default function Home() {
-	return <Layout></Layout>;
+	return (
+		<Layout>
+			<Flex maxW="container.xl" mx="auto" pt="10" flexDir={"column"}>
+				<VehicleStats />
+				<VehicleGraphs />
+			</Flex>
+		</Layout>
+	);
 }

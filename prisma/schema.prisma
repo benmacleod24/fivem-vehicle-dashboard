@@ -19,6 +19,7 @@ model vehiclelist {
   stock        Int              @default(10) @db.SmallInt
   shop         vehiclelist_shop @default(pdm)
   released     Boolean          @default(false)
+  playercars   playercars[]
 
   @@index([price], map: "price")
   @@index([released], map: "released")
@@ -125,7 +126,7 @@ model playercars {
   cid                 Int?
   purchase_price      Float?  @db.Float
   isFinanced          Int?
-  model               String? @db.VarChar(50)
+  model               String  @db.VarChar(50)
   vehicle_state       String? @db.LongText
   fuel                Int?    @default(100)
   name                String? @db.VarChar(50)
@@ -146,6 +147,8 @@ model playercars {
   roadtaxDue          String? @default("0") @db.VarChar(50)
   sale                String  @default("0") @db.VarChar(50)
   vinscratched        Int     @default(0)
+
+  vehicle vehiclelist @relation(references: [model], fields: [model])
 
   @@index([cid], map: "cid")
   @@index([license_plate], map: "license_plate")
@@ -278,18 +281,6 @@ model boost_queue {
   pSrc       Int?
 }
 
-model boosting_settings {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  id Int @id @default(autoincrement()) @map("#")
-  citizenid  String  @db.VarChar(255)
-  background String? @db.VarChar(255)
-  class      String  @default("D") @db.TinyText
-  progress   Int     @default(0)
-  vin        Int?
-
-  @@index([citizenid], map: "citizenid")
-}
-
 model boostingcharacterlevels {
   boosterId       String   @id
   characterId     Int
@@ -299,24 +290,22 @@ model boostingcharacterlevels {
 }
 
 model boostingcontracts {
-  id               String         @id
+  id               String   @id
   vehicle          String
   level            Int
   experienceReward Int
-  publicCost       Decimal        @db.Decimal(10, 2)
+  publicCost       Decimal  @db.Decimal(10, 2)
   contractOwner    Int
-  createdAt        DateTime       @default(now())
+  createdAt        DateTime @default(now())
   updatedAt        DateTime
-  boostinglevels   boostinglevels @relation(fields: [level], references: [id], map: "boostingContracts_level_fkey")
 
   @@index([level], map: "boostingContracts_level_fkey")
 }
 
 model boostinglevels {
-  id                Int                 @id @default(autoincrement())
-  minimumExpLevel   Int                 @default(500)
-  displayLevel      String              @default("Z")
-  boostingcontracts boostingcontracts[]
+  id              Int    @id @default(autoincrement())
+  minimumExpLevel Int    @default(500)
+  displayLevel    String @default("Z")
 }
 
 model character_bills {
@@ -441,6 +430,7 @@ model inventory_vehicles {
   @@index([name(length: 255)], map: "name")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model irp_import_vehs {
   id      Int
