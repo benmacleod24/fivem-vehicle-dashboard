@@ -19,7 +19,6 @@ model vehiclelist {
   stock        Int              @default(10) @db.SmallInt
   shop         vehiclelist_shop @default(pdm)
   released     Boolean          @default(false)
-  playercars   playercars[]
 
   @@index([price], map: "price")
   @@index([released], map: "released")
@@ -147,8 +146,6 @@ model playercars {
   roadtaxDue          String? @default("0") @db.VarChar(50)
   sale                String  @default("0") @db.VarChar(50)
   vinscratched        Int     @default(0)
-
-  vehicle vehiclelist @relation(references: [model], fields: [model])
 
   @@index([cid], map: "cid")
   @@index([license_plate], map: "license_plate")
@@ -430,6 +427,8 @@ model inventory_vehicles {
   @@index([name(length: 255)], map: "name")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model irp_import_vehs {

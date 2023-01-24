@@ -4,7 +4,7 @@ import { Flex, Grid, Text } from "@chakra-ui/react";
 
 import { format } from "../../../utils";
 import { getAvgVehPricePerClass, getMostCommenVehicleBought } from "../../helpers/charts";
-import BarChart from "./Bar";
+import BarChart from "./bar";
 
 interface VehicleGraphsProps {}
 

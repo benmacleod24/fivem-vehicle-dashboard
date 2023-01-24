@@ -17,10 +17,10 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
  * @url /api/stats/mostCommenVehicleBought
  * @description Collect average vehicle of every vehicle style.
  */
-export type MostCommenVehicleBought = Awaited<ReturnType<typeof GET>>;
+export type MostCommonVehicleBought = Awaited<ReturnType<typeof GET>>;
 const GET = async (req: NextApiRequest, res: NextApiResponse) => {
 	// Group data by vehicle style and average style price.
-	const mostCommenVehicleBought = await prisma.playercars.groupBy({
+	const mostCommonVehicleBought = await prisma.playercars.groupBy({
 		by: ["model"],
 		_count: {
 			model: true,
@@ -33,8 +33,8 @@ const GET = async (req: NextApiRequest, res: NextApiResponse) => {
 		take: 10,
 	});
 
-	res.status(200).json(mostCommenVehicleBought);
-	return mostCommenVehicleBought;
+	res.status(200).json(mostCommonVehicleBought);
+	return mostCommonVehicleBought;
 };
 
 export default handler;

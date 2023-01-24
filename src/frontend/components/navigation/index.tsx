@@ -1,7 +1,8 @@
-import { Button, ButtonGroup, Container, Flex, Icon, Text } from "@chakra-ui/react";
+import { Container, Flex, Icon, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { MdOfflineBolt } from "react-icons/md";
+import ButtonGroup from "./buttonGroup";
 
 interface NavigationProps {}
 
@@ -21,16 +22,8 @@ const Navigation: React.FC<NavigationProps> = (props) => {
 						</Text>
 					</Flex>
 				</Flex>
-				<Flex h="full" align={"center"} ml="14">
-					<ButtonGroup variant={"brand.menu"} gap={5}>
-						<Link href={"/"}>
-							<Button>Home</Button>
-						</Link>
-						<Link href="/search-vehicles">
-							<Button>Vehicle Search</Button>
-						</Link>
-					</ButtonGroup>
-				</Flex>
+
+				<ButtonGroup />
 			</Container>
 		</Flex>
 	);

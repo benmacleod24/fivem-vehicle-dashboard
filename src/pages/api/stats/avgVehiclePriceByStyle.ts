@@ -36,6 +36,21 @@ const GET = async (req: NextApiRequest, res: NextApiResponse) => {
 				price: "desc",
 			},
 		},
+		where: {
+			NOT: {
+				OR: [
+					{
+						style: "Command",
+					},
+					{
+						style: "Emergency",
+					},
+					{
+						style: "Remote Control",
+					},
+				],
+			},
+		},
 	});
 
 	res.status(200).json(vehiclePriceByStyle);

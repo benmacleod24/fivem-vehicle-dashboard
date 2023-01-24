@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 import { AvgVehiclePriceByStyle } from "../../../pages/api/stats/avgVehiclePriceByStyle";
-import { MostCommenVehicleBought } from "../../../pages/api/stats/mostCommenVehicleBought";
+import { MostCommonVehicleBought } from "../../../pages/api/stats/mostCommonVehicleBought";
 import { DataSets } from "../../../types";
 
 export const getAvgVehPricePerClass = () => {
@@ -38,8 +38,8 @@ export const getAvgVehPricePerClass = () => {
 };
 
 export const getMostCommenVehicleBought = () => {
-	const { data, error, isLoading } = useSWR<MostCommenVehicleBought>(
-		`/api/stats/mostCommenVehicleBought`
+	const { data, error, isLoading } = useSWR<MostCommonVehicleBought>(
+		`/api/stats/mostCommonVehicleBought`
 	);
 
 	// Memoize each label.

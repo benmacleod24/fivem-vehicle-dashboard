@@ -10,7 +10,7 @@ const Layout: React.FC<LayoutProps> = (props) => {
 	return (
 		<Flex w="100vw" h="100vh" flexDir={"column"}>
 			<Navigation />
-			<Container mx="auto" p="0" maxW={props.wrapperSize || "full"}>
+			<Container mx="auto" p="0" maxW={props.wrapperSize || "full"} pt="8">
 				{props.children}
 			</Container>
 		</Flex>
