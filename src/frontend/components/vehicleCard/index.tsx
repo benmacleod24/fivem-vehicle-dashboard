@@ -95,48 +95,39 @@ const VehicleCard: React.FC<VehicleCardProps> = (props) => {
 						>
 							Duplicate Brand Name
 						</Tag>
-						<Tag
-							colorScheme={"red"}
-							variant="solid"
-							borderRadius={"sm"}
-							minW="fit-content"
-						>
-							Duplicate Brand Name
-						</Tag>
-						<Tag
-							colorScheme={"red"}
-							variant="solid"
-							borderRadius={"sm"}
-							minW="fit-content"
-						>
-							Duplicate Brand Name
-						</Tag>
-						<Tag
-							colorScheme={"red"}
-							variant="solid"
-							borderRadius={"sm"}
-							minW="fit-content"
-						>
-							Duplicate Brand Name
-						</Tag>
 					</Flex>
 				</Flex>
 				<Flex flexDir={"column"}>
 					<Flex align={"center"} gap={5}>
 						<Text minW="fit-content" color="whiteAlpha.700" mb="0.5">
-							Vehicle Info
+							Information
 						</Text>
 						<Divider />
 					</Flex>
 					<Grid
-						templateColumns={"repeat(2, 1fr)"}
+						templateColumns={"repeat(1, 1fr)"}
 						columnGap={4}
 						w="full"
 						h="full"
 						py="3"
 						gap={3}
 					>
-						<Flex gap={2} justify="space-between">
+						<Flex gap={2}>
+							<Text fontWeight={"medium"} noOfLines={1}>
+								Spawn Code:
+							</Text>
+							<Text
+								as="code"
+								noOfLines={1}
+								bg="background.600"
+								px="2"
+								rounded={"md"}
+								pt="0.5"
+							>
+								pors911t
+							</Text>
+						</Flex>
+						<Flex gap={2}>
 							<Text fontWeight={"medium"} noOfLines={1}>
 								Manufactor:
 							</Text>
@@ -151,7 +142,7 @@ const VehicleCard: React.FC<VehicleCardProps> = (props) => {
 								Porsche
 							</Text>
 						</Flex>
-						<Flex gap={2} justify="space-between">
+						<Flex gap={2}>
 							<Text fontWeight={"medium"} noOfLines={1}>
 								Model:
 							</Text>
@@ -163,22 +154,7 @@ const VehicleCard: React.FC<VehicleCardProps> = (props) => {
 								rounded={"md"}
 								pt="0.5"
 							>
-								911 Turbo S
-							</Text>
-						</Flex>
-						<Flex gap={2} justify="space-between">
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Spawn Code:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								pors911t
+								Porsche 911 Turbo S
 							</Text>
 						</Flex>
 					</Grid>
