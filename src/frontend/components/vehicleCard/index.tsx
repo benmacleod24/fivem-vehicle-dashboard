@@ -1,25 +1,24 @@
-import {
-	Badge,
-	Divider,
-	Flex,
-	Grid,
-	IconButton,
-	Image,
-	Tag,
-	TagLabel,
-	Text,
-} from "@chakra-ui/react";
+import { Divider, Flex, Grid, Text } from "@chakra-ui/react";
+import { vehiclelist } from "@prisma/client";
 import React, { useState, useEffect } from "react";
-import { FaClipboard } from "react-icons/fa";
+import { FaDollarSign, FaIndustry, FaCheck, FaMinus } from "react-icons/fa";
 import { format } from "../../../utils";
+import DataWrapper from "./dataWrapper";
+import ImageCard from "./imageCard";
+import QuickTags from "./quickTags";
+import ValueLabel from "./valueLabel";
+import { BsFillDisplayFill } from "react-icons/bs";
+import { IoLogoModelS } from "react-icons/io";
 
-interface VehicleCardProps {}
+interface VehicleCardProps {
+	vehicle: vehiclelist;
+}
 
 /**
  * @description Vehicle card for the search page.
  * @return {React.FC<VehicleCard>}
  */
-const VehicleCard: React.FC<VehicleCardProps> = (props) => {
+const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 	return (
 		<Flex
 			bg="background.700"
@@ -29,81 +28,17 @@ const VehicleCard: React.FC<VehicleCardProps> = (props) => {
 			w="fit-content"
 			maxW="md"
 			boxShadow={"md"}
+			h="fit-content"
 			overflow="hidden"
 			flexDir={"column"}
 			minW="sm"
 		>
-			<Flex
-				pos="relative"
-				borderBottom={"1px solid"}
-				borderColor="brand.700"
-				boxShadow={"base"}
-			>
-				<Image
-					w="full"
-					maxH="48"
-					minH="48"
-					objectFit={"cover"}
-					objectPosition="center"
-					src="https://i.imgur.com/s3ML4lu.jpg"
-				/>
-				<Flex
-					pos="absolute"
-					bottom="0"
-					w="full"
-					h="100%"
-					align={"flex-end"}
-					backdropFilter="blur(0.2px)"
-					p="3"
-					bgGradient="-webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.9)), to(rgba(0, 0, 0, 0)));"
-				>
-					<Flex align={"center"} justify="space-between" w="full">
-						<Text fontWeight={"bold"}>Porsche 911 Turbo S</Text>
-						<IconButton
-							rounded={"full"}
-							aria-label="copy-model"
-							icon={<FaClipboard />}
-							variant="ghost"
-						/>
-					</Flex>
-				</Flex>
-			</Flex>
+			<ImageCard vehicle={vehicle} />
 			<Flex p="3" flexDir={"column"}>
-				<Flex flexDir={"column"} mb="6">
-					<Flex align={"center"} gap={5}>
-						<Text minW="fit-content" color="whiteAlpha.700" mb="0.5">
-							Quick Tags
-						</Text>
-						<Divider />
-					</Flex>
-					<Flex
-						mt="5px"
-						overflowY={"hidden"}
-						overflowX="auto"
-						gap={3}
-						css={{
-							"&::-webkit-scrollbar": {
-								display: "none",
-							},
-						}}
-					>
-						<Tag
-							colorScheme={"red"}
-							variant="solid"
-							borderRadius={"sm"}
-							minW="fit-content"
-						>
-							Duplicate Brand Name
-						</Tag>
-					</Flex>
-				</Flex>
-				<Flex flexDir={"column"}>
-					<Flex align={"center"} gap={5}>
-						<Text minW="fit-content" color="whiteAlpha.700" mb="0.5">
-							Information
-						</Text>
-						<Divider />
-					</Flex>
+				<QuickTags vehicle={vehicle} />
+
+				{/* Vehicle Information */}
+				<DataWrapper title="Information">
 					<Grid
 						templateColumns={"repeat(1, 1fr)"}
 						columnGap={4}
@@ -112,157 +47,50 @@ const VehicleCard: React.FC<VehicleCardProps> = (props) => {
 						py="3"
 						gap={3}
 					>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Spawn Code:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								pors911t
-							</Text>
-						</Flex>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Manufactor:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								Porsche
-							</Text>
-						</Flex>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Model:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								Porsche 911 Turbo S
-							</Text>
-						</Flex>
+						<ValueLabel
+							icon={FaIndustry}
+							label="Manufacturer"
+							value={vehicle.vehicleBrand}
+						/>
+						<ValueLabel
+							icon={BsFillDisplayFill}
+							label="Display Name"
+							value={vehicle.displayName}
+						/>
+						<ValueLabel icon={IoLogoModelS} label="Model" value={vehicle.model} />
 					</Grid>
-				</Flex>
-				<Flex flexDir={"column"} mt="5">
-					<Flex align={"center"} gap={5}>
-						<Text minW="fit-content" color="whiteAlpha.700" mb="0.5">
-							Properties
-						</Text>
-						<Divider />
-					</Flex>
+				</DataWrapper>
+
+				{/* Vehicle Properties */}
+				<DataWrapper title="Properties">
 					<Grid
-						templateColumns={"repeat(3, 1fr)"}
+						templateColumns={"repeat(2, 1fr)"}
 						columnGap={4}
 						w="full"
 						h="full"
 						py="3"
 						gap={3}
+						alignItems={"flex-end"}
 					>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Price:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								{format.format(340213)}
-							</Text>
-						</Flex>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Seats:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								2
-							</Text>
-						</Flex>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Style:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								Sport
-							</Text>
-						</Flex>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Trunk:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								250
-							</Text>
-						</Flex>
-						<Flex gap={2}>
-							<Text fontWeight={"medium"} noOfLines={1}>
-								Shop:
-							</Text>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								PDM
-							</Text>
-						</Flex>
-						<Flex gap={2}>
-							<Text
-								as="code"
-								noOfLines={1}
-								bg="background.600"
-								px="2"
-								rounded={"md"}
-								pt="0.5"
-							>
-								Not Released
-							</Text>
-						</Flex>
+						<ValueLabel
+							icon={FaDollarSign}
+							label="Price"
+							value={format.format(vehicle.price)}
+						/>
+						<ValueLabel icon={FaDollarSign} label="Seats" value={vehicle.seats} />
+						<ValueLabel icon={FaDollarSign} label="Style" value={vehicle.style} />
+						<ValueLabel icon={FaDollarSign} label="Trunk" value={vehicle.trunk} />
+						<ValueLabel
+							icon={FaDollarSign}
+							label="Shop"
+							value={vehicle.shop.toUpperCase()}
+						/>
+						<ValueLabel
+							icon={vehicle.released ? FaCheck : FaMinus}
+							value={vehicle.released ? "Released" : "Not Released"}
+						/>
 					</Grid>
-				</Flex>
+				</DataWrapper>
 			</Flex>
 		</Flex>
 	);

@@ -19,7 +19,7 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
  * @description
  */
 const GET = (req: NextApiRequest, res: NextApiResponse) => {
-	let filePath = path.join(path.resolve("./src/frontend/assets/cars"), `${req.query.model}.jpg`);
+	let filePath = path.join(path.resolve("./src/styles/assets/cars"), `${req.query.model}.jpg`);
 
 	if (!fs.existsSync(filePath)) {
 		filePath = path.join(path.resolve("./src/styles/assets/cars"), `no-image.jpg`);

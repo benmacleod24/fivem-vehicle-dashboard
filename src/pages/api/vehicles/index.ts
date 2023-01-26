@@ -3,6 +3,7 @@ import { prisma } from "@prisma";
 import { z } from "zod";
 import { stringToNumber } from "../../../utils";
 import { updateCreateVehicleValidator } from "../../../types";
+import { Prisma } from "@prisma/client";
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
@@ -23,85 +24,129 @@ const handler = (req: NextApiRequest, res: NextApiResponse) => {
  * @description Get a paginated list of all the vehicles.
  */
 
-const searchParams = z.object({
+const queryParams = z.object({
 	page: z.ostring().transform(stringToNumber),
 	perPage: z.ostring().transform(stringToNumber),
+
+	// Direct Search Values
+	shop: z.ostring().transform((s) => s?.replaceAll(" ", "")),
+	displayName: z.ostring().transform((s) => s?.replaceAll(" ", "")),
+	vehicleBrand: z.ostring().transform((s) => s?.replaceAll(" ", "")),
 	model: z.ostring(),
-	displayName: z.ostring(),
-	vehicleBrand: z.ostring(),
-	shop: z.ostring(),
-	released: z.ostring(),
-	seats: z.ostring().transform(stringToNumber),
+	style: z.ostring().transform((s) => s?.replaceAll(" ", "")),
+	released: z.ostring().transform((s) => s?.toUpperCase()),
+
+	// Range Values
+	priceMin: z.ostring().transform(stringToNumber),
+	priceMax: z.ostring().transform(stringToNumber),
+	seatsMin: z.ostring().transform(stringToNumber),
+	seatsMax: z.ostring().transform(stringToNumber),
+	trunkMin: z.ostring().transform(stringToNumber),
+	trunkMax: z.ostring().transform(stringToNumber),
+	stockMin: z.ostring().transform(stringToNumber),
+	stockMax: z.ostring().transform(stringToNumber),
 });
 
+export type VehicleQueryResponse = Awaited<ReturnType<typeof GET>>;
 const GET = async (req: NextApiRequest, res: NextApiResponse) => {
-	const params = searchParams.parse(req.query);
-	const page: number = Number(params.page) || 1;
-	const perPageLimit: number = Number(params.perPage) || 6;
+	const params = queryParams.parse(req.query);
+
+	// Mutable where clause
+	// for building search query.
 	let where = {};
 
-	if (isNaN(Number(params.page)) || isNaN(Number(params.page))) {
-		return res.status(300).json({
-			status: 300,
-			message: "Data input was incorrect/wrong type.",
-		});
+	// Determine weather we are using
+	// the released params.
+	if (params.released && params.released !== "BOTH") {
+		where = {
+			...where,
+			released: params.released === "RELEASED" ? true : false,
+		};
 	}
 
-	// Vehicle Brand
-	if (params.vehicleBrand) {
-		where = { ...where, vehicleBrand: { contains: params.vehicleBrand } };
+	// Simple direct query params.
+	if (params.shop && params.shop !== "All") where = { ...where, shop: params.shop };
+	if (params.model) where = { ...where, model: { contains: params.model } };
+	if (params.style) where = { ...where, style: { contains: params.style } };
+	if (params.displayName) where = { ...where, displayName: { contains: params.displayName } };
+	if (params.vehicleBrand) where = { ...where, vehicleBrand: { contains: params.vehicleBrand } };
+
+	// Price range clause.
+	if (params.priceMax || params.priceMin) {
+		where = {
+			...where,
+			price: {
+				lte: params.priceMax,
+				gte: params.priceMin,
+			},
+		};
 	}
 
-	// Vehicle Model
-	if (params.model) {
-		where = { ...where, model: { contains: params.model } };
+	// Seats range clause.
+	if (params.seatsMax || params.seatsMin) {
+		where = {
+			...where,
+			seats: {
+				lte: params.seatsMax,
+				gte: params.seatsMin,
+			},
+		};
 	}
 
-	// Vehicle Model
-	if (params.displayName) {
-		where = { ...where, displayName: params.displayName };
+	// Stock range clause.
+	if (params.stockMax || params.stockMin) {
+		where = {
+			...where,
+			stock: {
+				lte: params.stockMax,
+				gte: params.stockMin,
+			},
+		};
 	}
 
-	// Vehicle Shop
-	if (params.shop && params.shop !== "all") {
-		where = { ...where, shop: { equals: params.shop } };
-	}
-
-	// Vehicle is Released
-	if (params.released) {
-		if (params.released.toLowerCase() === "not_released") where = { ...where, released: false };
-		if (params.released.toLowerCase() === "released") where = { ...where, released: true };
-	}
-
-	// Vehicle Seats
-	if (params.seats) {
-		where = { ...where, seats: params.seats };
+	// Trunk size range clause.
+	if (params.trunkMax || params.trunkMin) {
+		where = {
+			...where,
+			trunk: {
+				lte: params.trunkMax,
+				gte: params.trunkMin,
+			},
+		};
 	}
 
 	try {
-		const totalNumOfVehicles = await prisma.vehiclelist.count({
-			where,
-		});
+		// Collect total num of vehicles in where clause.
+		const totalNumOfVehicles = await prisma.vehiclelist.count({ where });
 
+		// Collect all where from the search query.
 		const vehicles = await prisma.vehiclelist.findMany({
 			where,
-			take: perPageLimit,
-			skip: page !== undefined && page !== null ? (page - 1) * perPageLimit : 0,
+			take: params.perPage || 6,
+			skip:
+				(params.page !== undefined && ((params.page || 1) - 1) * (params.perPage || 6)) ||
+				0,
 			orderBy: {
 				id: "asc",
 			},
 		});
 
-		return res.status(200).json({
+		console.log(where);
+
+		// Response data to be returned.
+		const responeData = {
 			status: 200,
-			pagination: {
+			pageination: {
+				page: params.page || 1,
+				perPage: params.perPage || 6,
 				total: totalNumOfVehicles,
-				perPage: perPageLimit,
-				page: page,
 			},
 			data: vehicles,
 			timestamp: new Date(),
-		});
+		};
+
+		res.status(200).json(responeData);
+		return responeData;
 	} catch (e) {
 		console.log(e);
 		return res.status(500).json({

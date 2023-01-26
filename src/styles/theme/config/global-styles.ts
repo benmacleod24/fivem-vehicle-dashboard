@@ -6,5 +6,8 @@ export const styles = {
 			letterSpacing: "-0.5px",
 			fontFamily: "'Inter', sans-serif;",
 		},
+		":host,:root": {
+			"--chakra-ui-focus-ring-color": "#ff007d99",
+		},
 	}),
 };
