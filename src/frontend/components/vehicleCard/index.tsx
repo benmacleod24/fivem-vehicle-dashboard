@@ -1,7 +1,7 @@
 import { Divider, Flex, Grid, Text } from "@chakra-ui/react";
 import { vehiclelist } from "@prisma/client";
 import React, { useState, useEffect } from "react";
-import { FaDollarSign, FaIndustry, FaCheck, FaMinus } from "react-icons/fa";
+import { FaDollarSign, FaIndustry, FaCheck, FaMinus, FaWeight, FaStore } from "react-icons/fa";
 import { format } from "../../../utils";
 import DataWrapper from "./dataWrapper";
 import ImageCard from "./imageCard";
@@ -9,6 +9,7 @@ import QuickTags from "./quickTags";
 import ValueLabel from "./valueLabel";
 import { BsFillDisplayFill } from "react-icons/bs";
 import { IoLogoModelS } from "react-icons/io";
+import { MdEventSeat, MdStyle } from "react-icons/md";
 
 interface VehicleCardProps {
 	vehicle: vehiclelist;
@@ -77,11 +78,11 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 							label="Price"
 							value={format.format(vehicle.price)}
 						/>
-						<ValueLabel icon={FaDollarSign} label="Seats" value={vehicle.seats} />
-						<ValueLabel icon={FaDollarSign} label="Style" value={vehicle.style} />
-						<ValueLabel icon={FaDollarSign} label="Trunk" value={vehicle.trunk} />
+						<ValueLabel icon={MdEventSeat} label="Seats" value={vehicle.seats} />
+						<ValueLabel icon={MdStyle} label="Style" value={vehicle.style} />
+						<ValueLabel icon={FaWeight} label="Trunk" value={vehicle.trunk} />
 						<ValueLabel
-							icon={FaDollarSign}
+							icon={FaStore}
 							label="Shop"
 							value={vehicle.shop.toUpperCase()}
 						/>
