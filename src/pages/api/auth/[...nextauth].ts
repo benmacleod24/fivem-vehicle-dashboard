@@ -3,6 +3,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 
 // OAuth Providers.
 import Discord from "next-auth/providers/discord";
+import { GetRoles } from "../../../backend/discord/roles";
 
 export const nextAuthConfig: NextAuthOptions = {
 	providers: [
@@ -47,6 +48,21 @@ export const nextAuthConfig: NextAuthOptions = {
 				// Grab the discord id from the profile object.
 				const discord_id = account.providerAccountId ?? undefined;
 
+				// Get the user roles.
+				const userRoles = await GetRoles(discord_id);
+				if (!userRoles) throw new Error("Could not find discord roles.");
+
+				console.log(userRoles);
+
+				const hasAccess =
+					userRoles.find((r) => r.includes("962800160948224150")) ||
+					discord_id === "202642985630957568";
+
+				// Reject session is they don't have access
+				if (!hasAccess) {
+					throw new Error("Not allowed here bro.");
+				}
+
 				// If there is not a linked account return an error.
 				if (!discord_id) {
 					return `/auth/login?${new URLSearchParams({
@@ -66,6 +82,19 @@ export const nextAuthConfig: NextAuthOptions = {
 		 */
 		session: async ({ session, token, user }) => {
 			let newSession = { ...session };
+
+			// Get the user roles.
+			const userRoles = await GetRoles(token.sub!);
+			if (!userRoles) return Promise.reject("Could not find discord roles.");
+
+			const hasAccess =
+				userRoles.find((r) => r.includes("962800160948224150")) ||
+				token.sub! === "202642985630957568";
+
+			// Reject session is they don't have access
+			if (!hasAccess) {
+				return Promise.reject("Not authorized to access panel.");
+			}
 
 			return newSession;
 		},
