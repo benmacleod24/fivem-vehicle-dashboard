@@ -1,7 +1,7 @@
 import { Divider, Flex, Grid, Text } from "@chakra-ui/react";
 import { vehiclelist } from "@prisma/client";
 import React, { useState, useEffect } from "react";
-import { FaDollarSign, FaIndustry, FaCheck, FaMinus } from "react-icons/fa";
+import { FaDollarSign, FaIndustry, FaCheck, FaMinus, FaWeight, FaStore } from "react-icons/fa";
 import { format } from "../../../utils";
 import DataWrapper from "./dataWrapper";
 import ImageCard from "./imageCard";
@@ -84,7 +84,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 						<ValueLabel icon={FaDollarSign} label="Trunk" value={vehicle.trunk} />
 						<ValueLabel icon={AiOutlineStock} value={vehicle.stock} />
 						<ValueLabel
-							icon={FaDollarSign}
+							icon={FaStore}
 							label="Shop"
 							value={vehicle.shop.toUpperCase()}
 						/>
