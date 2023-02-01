@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@prisma";
+import { getServerSession } from "next-auth";
+import { nextAuthConfig } from "../auth/[...nextauth]";
 
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
+
+	const session = await getServerSession(req, res, nextAuthConfig);
+	if (!session || !session.user) throw new Error("Aint got access bro.");
 
 	switch (method) {
 		case "GET":

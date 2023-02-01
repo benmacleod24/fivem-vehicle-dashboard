@@ -4,9 +4,14 @@ import { z } from "zod";
 import { stringToNumber } from "../../../utils";
 import { updateCreateVehicleValidator } from "../../../types";
 import { Prisma } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { nextAuthConfig } from "../auth/[...nextauth]";
 
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 	const { method } = req;
+
+	const session = await getServerSession(req, res, nextAuthConfig);
+	if (!session || !session.user) throw new Error("Aint got access bro.");
 
 	switch (method) {
 		case "GET":
@@ -29,6 +34,7 @@ const queryParams = z.object({
 	perPage: z.ostring().transform(stringToNumber),
 
 	// Direct Search Values
+	vehicleId: z.ostring().transform(stringToNumber),
 	shop: z.ostring().transform((s) => s?.replaceAll(" ", "")),
 	displayName: z.ostring().transform((s) => s?.replaceAll(" ", "")),
 	vehicleBrand: z.ostring().transform((s) => s?.replaceAll(" ", "")),
@@ -55,63 +61,70 @@ const GET = async (req: NextApiRequest, res: NextApiResponse) => {
 	// for building search query.
 	let where = {};
 
-	// Determine weather we are using
-	// the released params.
-	if (params.released && params.released !== "BOTH") {
-		where = {
-			...where,
-			released: params.released === "RELEASED" ? true : false,
-		};
-	}
+	if (!params.vehicleId) {
+		// Determine weather we are using
+		// the released params.
+		if (params.released && params.released !== "BOTH") {
+			where = {
+				...where,
+				released: params.released === "RELEASED" ? true : false,
+			};
+		}
 
-	// Simple direct query params.
-	if (params.shop && params.shop !== "All") where = { ...where, shop: params.shop };
-	if (params.model) where = { ...where, model: { contains: params.model } };
-	if (params.style) where = { ...where, style: { contains: params.style } };
-	if (params.displayName) where = { ...where, displayName: { contains: params.displayName } };
-	if (params.vehicleBrand) where = { ...where, vehicleBrand: { contains: params.vehicleBrand } };
+		// Simple direct query params.
+		if (params.shop && params.shop !== "All") where = { ...where, shop: params.shop };
+		if (params.model) where = { ...where, model: { contains: params.model } };
+		if (params.style) where = { ...where, style: { contains: params.style } };
+		if (params.displayName) where = { ...where, displayName: { contains: params.displayName } };
+		if (params.vehicleBrand)
+			where = { ...where, vehicleBrand: { contains: params.vehicleBrand } };
 
-	// Price range clause.
-	if (params.priceMax || params.priceMin) {
-		where = {
-			...where,
-			price: {
-				lte: params.priceMax,
-				gte: params.priceMin,
-			},
-		};
-	}
+		// Price range clause.
+		if (params.priceMax || params.priceMin) {
+			where = {
+				...where,
+				price: {
+					lte: params.priceMax,
+					gte: params.priceMin,
+				},
+			};
+		}
 
-	// Seats range clause.
-	if (params.seatsMax || params.seatsMin) {
-		where = {
-			...where,
-			seats: {
-				lte: params.seatsMax,
-				gte: params.seatsMin,
-			},
-		};
-	}
+		// Seats range clause.
+		if (params.seatsMax || params.seatsMin) {
+			where = {
+				...where,
+				seats: {
+					lte: params.seatsMax,
+					gte: params.seatsMin,
+				},
+			};
+		}
 
-	// Stock range clause.
-	if (params.stockMax || params.stockMin) {
-		where = {
-			...where,
-			stock: {
-				lte: params.stockMax,
-				gte: params.stockMin,
-			},
-		};
-	}
+		// Stock range clause.
+		if (params.stockMax || params.stockMin) {
+			where = {
+				...where,
+				stock: {
+					lte: params.stockMax,
+					gte: params.stockMin,
+				},
+			};
+		}
 
-	// Trunk size range clause.
-	if (params.trunkMax || params.trunkMin) {
+		// Trunk size range clause.
+		if (params.trunkMax || params.trunkMin) {
+			where = {
+				...where,
+				trunk: {
+					lte: params.trunkMax,
+					gte: params.trunkMin,
+				},
+			};
+		}
+	} else {
 		where = {
-			...where,
-			trunk: {
-				lte: params.trunkMax,
-				gte: params.trunkMin,
-			},
+			id: params.vehicleId,
 		};
 	}
 
@@ -163,7 +176,7 @@ const GET = async (req: NextApiRequest, res: NextApiResponse) => {
  * @description Create a new vehicle in the database.
  */
 const POST = async (req: NextApiRequest, res: NextApiResponse) => {
-	const vehicleProperties = updateCreateVehicleValidator.parse(req.body);
+	const vehicleProperties = updateCreateVehicleValidator.parse(JSON.parse(req.body));
 
 	// Make sure correct properties exist.
 	if (!vehicleProperties.model || !vehicleProperties) {
@@ -172,6 +185,9 @@ const POST = async (req: NextApiRequest, res: NextApiResponse) => {
 			message: "Could not find required properties to create a new vehicle.",
 		});
 	}
+
+	// Doesn't actually exiet yet.
+	delete vehicleProperties.class;
 
 	try {
 		// Create the new vehicle in the database.

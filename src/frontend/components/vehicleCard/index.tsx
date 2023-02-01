@@ -9,6 +9,7 @@ import QuickTags from "./quickTags";
 import ValueLabel from "./valueLabel";
 import { BsFillDisplayFill } from "react-icons/bs";
 import { IoLogoModelS } from "react-icons/io";
+import { AiOutlineStock } from "react-icons/ai";
 
 interface VehicleCardProps {
 	vehicle: vehiclelist;
@@ -21,6 +22,7 @@ interface VehicleCardProps {
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 	return (
 		<Flex
+			h="full"
 			bg="background.700"
 			border="1px solid"
 			borderColor={"background.600"}
@@ -80,6 +82,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 						<ValueLabel icon={FaDollarSign} label="Seats" value={vehicle.seats} />
 						<ValueLabel icon={FaDollarSign} label="Style" value={vehicle.style} />
 						<ValueLabel icon={FaDollarSign} label="Trunk" value={vehicle.trunk} />
+						<ValueLabel icon={AiOutlineStock} value={vehicle.stock} />
 						<ValueLabel
 							icon={FaDollarSign}
 							label="Shop"

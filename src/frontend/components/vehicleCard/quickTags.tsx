@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Flex, Text, Divider, Tag } from "@chakra-ui/react";
 import { vehiclelist } from "@prisma/client";
+import { doesVehicleHaveDupBrandName } from "../../../utils";
 
 interface QuickTagsProps {
 	vehicle: vehiclelist;
@@ -19,6 +20,7 @@ const QuickTags: React.FC<QuickTagsProps> = ({ vehicle }) => {
 				</Text>
 				<Divider />
 			</Flex>
+
 			<Flex
 				mt="5px"
 				overflowY={"hidden"}
@@ -29,6 +31,11 @@ const QuickTags: React.FC<QuickTagsProps> = ({ vehicle }) => {
 						display: "none",
 					},
 				}}
+				visibility={
+					doesVehicleHaveDupBrandName(vehicle.vehicleBrand, vehicle.displayName)
+						? "visible"
+						: "hidden"
+				}
 			>
 				<Tag colorScheme={"red"} variant="solid" borderRadius={"sm"} minW="fit-content">
 					Duplicate Brand Name

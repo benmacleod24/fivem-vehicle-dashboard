@@ -8,19 +8,21 @@ interface SearchSelectProps {
 	label?: string;
 	data: string[];
 	onClick?: (v: string) => void;
+	valueParser?: (v?: any) => string;
 }
 
 /**
  * @description Select component for database search.
  * @return {React.FC<SearchSelect>}
  */
-const SearchSelect: React.FC<SearchSelectProps> = ({ name, label, data, onClick }) => {
+const SearchSelect: React.FC<SearchSelectProps> = ({ name, label, data, onClick, valueParser }) => {
 	const id = useId();
 	const [open, setOpen] = useState<boolean>(false);
 	const [props, meta, helpers] = useField(name);
 	const ref = React.useRef();
 
-	const valueColor = props.value ? "white" : "whiteAlpha.700";
+	const valueColor =
+		(valueParser && valueParser(props.value)) || props.value ? "white" : "whiteAlpha.700";
 
 	useOutsideClick({
 		ref: ref as any,
@@ -53,7 +55,9 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ name, label, data, onClick 
 					align={"center"}
 					zIndex={open ? 100 : 0}
 				>
-					<Text color={valueColor}>{props.value || label || name}</Text>
+					<Text color={valueColor}>
+						{(valueParser && valueParser(props.value)) || props.value || label || name}
+					</Text>
 					<Icon
 						as={ChevronDownIcon}
 						transform={`rotate(${open ? 180 : 0}deg)`}
@@ -101,7 +105,7 @@ const SearchSelect: React.FC<SearchSelectProps> = ({ name, label, data, onClick 
 							_hover={{
 								bg: "whiteAlpha.100",
 							}}
-							key={id}
+							key={s + new Date().toString()}
 							onClick={(e) => {
 								helpers.setValue(s);
 								setOpen(false);

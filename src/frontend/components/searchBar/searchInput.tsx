@@ -14,13 +14,14 @@ interface SearchInputProps {
 	name: string;
 	label?: string;
 	helpText?: string;
+	valueParser?: (v: string) => any;
 }
 
 /**
  * @description Search input component.
  * @return {React.FC<SearchInput>}
  */
-const SearchInput: React.FC<SearchInputProps> = ({ name, label, helpText }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ name, label, helpText, valueParser }) => {
 	const [props, meta, helpers] = useField(name);
 
 	return (
@@ -32,7 +33,11 @@ const SearchInput: React.FC<SearchInputProps> = ({ name, label, helpText }) => {
 				<Input
 					focusBorderColor="brand.600"
 					value={props.value}
-					onChange={(e) => helpers.setValue(e.target.value)}
+					onChange={(e) => {
+						helpers.setValue(
+							(valueParser && valueParser(e.target.value)) || e.target.value
+						);
+					}}
 				/>
 			</InputGroup>
 			{helpText && (

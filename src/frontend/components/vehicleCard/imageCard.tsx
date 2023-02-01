@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Flex, Image, Text, IconButton } from "@chakra-ui/react";
 import { FaClipboard } from "react-icons/fa";
 import { vehiclelist } from "@prisma/client";
+import { EditIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 interface ImageCardProps {
 	vehicle: vehiclelist;
@@ -12,11 +14,16 @@ interface ImageCardProps {
  * @return {React.FC<ImageCard>}
  */
 const ImageCard: React.FC<ImageCardProps> = ({ vehicle }) => {
+	const { push, pathname } = useRouter();
 	const imageSource: string = `/api/cdn/vehicle/${vehicle.model}`;
 
 	// Copy the model to the clipboard
 	const copyModelToClipboard = () => {
 		navigator.clipboard.writeText(vehicle.model);
+	};
+
+	const onEdit = () => {
+		push(`${pathname}?isEditing=true&vehicleId=${vehicle.id}`);
 	};
 
 	return (
@@ -43,13 +50,22 @@ const ImageCard: React.FC<ImageCardProps> = ({ vehicle }) => {
 					<Text fontWeight={"bold"}>
 						{vehicle.vehicleBrand} {vehicle.displayName}
 					</Text>
-					<IconButton
-						rounded={"full"}
-						aria-label="copy-model"
-						icon={<FaClipboard />}
-						variant="ghost"
-						onClick={copyModelToClipboard}
-					/>
+					<Flex gap={1}>
+						<IconButton
+							rounded={"full"}
+							aria-label="copy-model"
+							icon={<EditIcon />}
+							variant="ghost"
+							onClick={onEdit}
+						/>
+						<IconButton
+							rounded={"full"}
+							aria-label="copy-model"
+							icon={<FaClipboard />}
+							variant="ghost"
+							onClick={copyModelToClipboard}
+						/>
+					</Flex>
 				</Flex>
 			</Flex>
 		</Flex>

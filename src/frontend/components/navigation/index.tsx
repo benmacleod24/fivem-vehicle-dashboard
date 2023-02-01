@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { MdOfflineBolt } from "react-icons/md";
 import ButtonGroup from "./buttonGroup";
+import NavRightSide from "./rightSide";
 
 interface NavigationProps {}
 
@@ -24,6 +25,7 @@ const Navigation: React.FC<NavigationProps> = (props) => {
 				</Flex>
 
 				<ButtonGroup />
+				<NavRightSide />
 			</Container>
 		</Flex>
 	);

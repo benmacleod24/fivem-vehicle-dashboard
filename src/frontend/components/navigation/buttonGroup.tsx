@@ -11,10 +11,10 @@ interface ButtonGroupProps {}
  */
 const ButtonGroup: React.FC<ButtonGroupProps> = (props) => {
 	return (
-		<Flex h="full" align={"center"} ml="14">
+		<Flex h="full" align={"center"} ml="14" flex={1}>
 			<BG variant={"brand.menu"} gap={5}>
 				{Object.values(links).map((l) => (
-					<Button as={Link} href={l.url}>
+					<Button as={Link} key={l.text + new Date().toISOString()} href={l.url}>
 						{l.text}
 					</Button>
 				))}

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { stringToNumber } from "../../utils";
+import { releasedToBool, stringToBool, stringToNumber } from "../../utils";
 
 export const updateCreateVehicleValidator = z.object({
 	seats: z.onumber(),
