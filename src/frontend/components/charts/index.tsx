@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Flex, Grid, Text } from "@chakra-ui/react";
 
 import { format } from "../../../utils";
-import { getAvgVehPricePerClass, getMostCommenVehicleBought } from "../../helpers/charts";
+import { useAvgVehPricePerClass, useMostCommenVehicleBought } from "../../helpers/charts";
 import BarChart from "./bar";
 
 interface VehicleGraphsProps {}
@@ -13,8 +13,8 @@ interface VehicleGraphsProps {}
  * @return {React.FC<VehicleGraphs>}
  */
 const VehicleGraphs: React.FC<VehicleGraphsProps> = (props) => {
-	const { graphLabels: priceLabels, graphData: priceData } = getAvgVehPricePerClass();
-	const { graphLabels: commenLabels, graphData: commenData } = getMostCommenVehicleBought();
+	const { graphLabels: priceLabels, graphData: priceData } = useAvgVehPricePerClass();
+	const { graphLabels: commenLabels, graphData: commenData } = useMostCommenVehicleBought();
 
 	return (
 		<Flex flexDir={"column"} mt="5">

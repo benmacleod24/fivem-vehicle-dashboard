@@ -4,7 +4,7 @@ import { Flex, Grid, Text } from "@chakra-ui/react";
 
 import { useVehicleStats } from "../../helpers/stats";
 import StatWrapper from "./statWrapper";
-import { shopPercentageOfTotalStock } from "../../helpers/stats/stockAtShop";
+import { useShopPercentageOfTotalStock } from "../../helpers/stats/stockAtShop";
 
 interface VehicleStatsProps {}
 
@@ -28,7 +28,7 @@ const VehicleStats: React.FC<VehicleStatsProps> = (props) => {
 				<StatWrapper
 					label={"Stock at PDM"}
 					data={stats.stockAtPDM}
-					helper={`${shopPercentageOfTotalStock(
+					helper={`${useShopPercentageOfTotalStock(
 						stats.stockAtPDM as number,
 						totalNumberOfVehiclesInStock
 					)}% of Total Stock`}
@@ -36,7 +36,7 @@ const VehicleStats: React.FC<VehicleStatsProps> = (props) => {
 				<StatWrapper
 					label={"Stock at Drift School"}
 					data={stats.stockAtDrift}
-					helper={`${shopPercentageOfTotalStock(
+					helper={`${useShopPercentageOfTotalStock(
 						stats.stockAtDrift as number,
 						totalNumberOfVehiclesInStock
 					)}% of Total Stock`}
@@ -44,7 +44,7 @@ const VehicleStats: React.FC<VehicleStatsProps> = (props) => {
 				<StatWrapper
 					label={"Stock at Wild Throttle"}
 					data={stats.stockAtWildT}
-					helper={`${shopPercentageOfTotalStock(
+					helper={`${useShopPercentageOfTotalStock(
 						stats.stockAtWildT as number,
 						totalNumberOfVehiclesInStock
 					)}% of Total Stock`}

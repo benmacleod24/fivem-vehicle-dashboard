@@ -1,9 +1,9 @@
 import { vehiclelist_shop } from "@prisma/client";
 import { NumOfVehiclesInStock } from "../../../pages/api/stats/numOfVehiclesInStock";
 import useSWR from "swr";
-import { getNumOfVehiclesInStock } from ".";
+import { useNumOfVehiclesInStock } from ".";
 
-export const getStockAtShop = (shop: vehiclelist_shop) => {
+export const useStockAtShop = (shop: vehiclelist_shop) => {
 	const { data, error, isLoading } = useSWR<NumOfVehiclesInStock>(
 		`/api/stats/stockAtShop?shop=${shop}`
 	);
@@ -12,11 +12,9 @@ export const getStockAtShop = (shop: vehiclelist_shop) => {
 	return { data: data, error, isLoading };
 };
 
-export const shopPercentageOfTotalStock = (shopAmount: number, totalStock?: number) => {
+export const useShopPercentageOfTotalStock = (shopAmount: number, totalStock?: number) => {
+	totalStock = useNumOfVehiclesInStock().data || 1;
 	if (!shopAmount) return 0;
-	if (!totalStock) {
-		totalStock = getNumOfVehiclesInStock().data || 1;
-	}
 
 	return Math.ceil((shopAmount / totalStock) * 100);
 };

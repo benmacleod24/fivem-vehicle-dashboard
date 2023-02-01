@@ -1,14 +1,14 @@
 import {
-	getTotalNumOfVehiclesBought,
-	getVehiclesGroupedByRelease,
-	getStockAtShop,
-	getNumOfVehiclesInStock,
+	useTotalNumOfVehiclesBought,
+	useVehiclesGroupedByRelease,
+	useStockAtShop,
+	useNumOfVehiclesInStock,
 } from ".";
 
 export const useVehicleStats = () => {
-	const vehiclesGroupedByRelease = getVehiclesGroupedByRelease().data;
-	const totalNumberOfVehiclesPurchased = getNumOfVehiclesInStock().data;
-	const totalNumberOfVehiclesInStock = getNumOfVehiclesInStock().data;
+	const vehiclesGroupedByRelease = useVehiclesGroupedByRelease().data;
+	const totalNumberOfVehiclesPurchased = useTotalNumOfVehiclesBought().data;
+	const totalNumberOfVehiclesInStock = useNumOfVehiclesInStock().data;
 
 	// Total count of released vehicles
 	const vehiclesReleased =
@@ -30,8 +30,8 @@ export const useVehicleStats = () => {
 
 	return {
 		...objectOfStats,
-		stockAtPDM: getStockAtShop("pdm").data,
-		stockAtDrift: getStockAtShop("driftschool").data,
-		stockAtWildT: getStockAtShop("wildthrottle").data,
+		stockAtPDM: useStockAtShop("pdm").data,
+		stockAtDrift: useStockAtShop("driftschool").data,
+		stockAtWildT: useStockAtShop("wildthrottle").data,
 	};
 };

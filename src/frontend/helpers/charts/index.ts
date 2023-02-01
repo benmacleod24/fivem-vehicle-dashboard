@@ -4,13 +4,13 @@ import { AvgVehiclePriceByStyle } from "../../../pages/api/stats/avgVehiclePrice
 import { MostCommonVehicleBought } from "../../../pages/api/stats/mostCommonVehicleBought";
 import { DataSets } from "../../../types";
 
-export const getAvgVehPricePerClass = () => {
+export const useAvgVehPricePerClass = () => {
 	const { data, error, isLoading } = useSWR<AvgVehiclePriceByStyle>(
 		`/api/stats/avgVehiclePriceByStyle`
 	);
 
 	// Memoize each label.
-	const graphLabels = React.useMemo(() => {
+	const graphLabels = React.useMemo<string[]>(() => {
 		if (!data) return [];
 
 		// Return each style.
@@ -37,7 +37,7 @@ export const getAvgVehPricePerClass = () => {
 	};
 };
 
-export const getMostCommenVehicleBought = () => {
+export const useMostCommenVehicleBought = () => {
 	const { data, error, isLoading } = useSWR<MostCommonVehicleBought>(
 		`/api/stats/mostCommonVehicleBought`
 	);

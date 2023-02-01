@@ -22,7 +22,6 @@ interface VehicleCardProps {
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 	return (
 		<Flex
-			h="full"
 			bg="background.700"
 			border="1px solid"
 			borderColor={"background.600"}

@@ -4,7 +4,7 @@ import { NumOfVehiclesInStock } from "../../../pages/api/stats/numOfVehiclesInSt
 import { NumOfVehiclesBought } from "../../../pages/api/stats/numOfVehiclesPurchased";
 import { VehicleCountByReleaseGET } from "../../../pages/api/stats/vehicleCountByRelease";
 
-export const getVehiclesGroupedByRelease = () => {
+export const useVehiclesGroupedByRelease = () => {
 	const { data, error, isLoading } = useSWR<VehicleCountByReleaseGET>(
 		`/api/stats/vehicleCountByRelease`
 	);
@@ -17,7 +17,7 @@ export const getVehiclesGroupedByRelease = () => {
 	};
 };
 
-export const getTotalNumOfVehiclesBought = () => {
+export const useTotalNumOfVehiclesBought = () => {
 	const { data, error, isLoading } = useSWR<NumOfVehiclesBought>(
 		`/api/stats/numOfVehiclesPurchased`
 	);
@@ -26,7 +26,7 @@ export const getTotalNumOfVehiclesBought = () => {
 	return { data: data, error, isLoading };
 };
 
-export const getNumOfVehiclesInStock = () => {
+export const useNumOfVehiclesInStock = () => {
 	const { data, error, isLoading } = useSWR<NumOfVehiclesInStock>(
 		`/api/stats/numOfVehiclesInStock`
 	);

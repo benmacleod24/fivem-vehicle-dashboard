@@ -32,7 +32,7 @@ const EditBody: React.FC<EditBodyProps> = (props) => {
 		};
 
 		fetchData();
-	}, []);
+	}, [vehicleId]);
 
 	const onSubmit = async (
 		values: z.infer<typeof updateCreateVehicleValidator>,
@@ -55,7 +55,7 @@ const EditBody: React.FC<EditBodyProps> = (props) => {
 	if (!vehicleId || !data || isLoading) {
 		return (
 			<DrawerBody>
-				<Text>Couldn't process request, can't find vehicle id.</Text>
+				<Text>Couldn&apos;t process request, can&apos;t find vehicle id.</Text>
 			</DrawerBody>
 		);
 	}
