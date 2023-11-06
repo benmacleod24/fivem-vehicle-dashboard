@@ -1,5 +1,3 @@
-Certainly, here's an improved GitHub readme outline for your project:
-
 # FiveM Vehicle Management Dashboard
 
 ## Overview
